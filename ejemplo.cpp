@@ -12,6 +12,10 @@ int main(){
     int n;
     cout<<"Ingrese la cantidad de empleados: "<<endl;
     cin>>n;
+    if(n<1||n>100){
+        cout<<"Cantidad inválida. Debe estar entre 1 y 100"<<endl;
+        return 1;
+    }
     for(int i=0; i<n; i++){
         cout<<"\nEmpleado #"<<i+1<<endl;
         cout<<"Número: ";
