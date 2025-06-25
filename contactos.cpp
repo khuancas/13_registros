@@ -16,6 +16,7 @@ struct contactoEmail{
 void leerCorreo(correo &, string, string);
 void leerContacto(contactoEmail &, string, char, int, correo);
 void imprimeContacto(contactoEmail &);
+void modificarContacto(contactoEmail &);
 
 int main(){
     int n, op;
@@ -30,6 +31,7 @@ int main(){
         cout<<"Menu de opciones -------------------------"<<endl;
         cout<<"1. Agregar contacto"<<endl;
         cout<<"2. Mostrar contactos"<<endl;
+        cout<<"3. Modificar contacto"<<endl;
         cout<<"0. Salir"<<endl;
         cout<<"Elige una opcion: "; cin>>op;
         switch(op){
@@ -62,6 +64,21 @@ int main(){
             case 0:
                 cout<<"Esta seguro de salir? (S/N): ";
                 break;
+            case 3:
+                if (n==0){
+                    cout<<"No hay contactos para modificar"<<endl;
+                }else {
+                    int idx;
+                    cout<<"Ingrese el número del contacto que desea modificar (1 a "<<n<<"): ";
+                    cin>>idx;
+                    if(idx < 1 || idx > n){
+                        cout<<"Número inválido.\n";
+                    } else {
+                        modificarContacto(lista[idx - 1]);
+                    }
+                }
+                cin.get();
+                break;
             default:
                 cout<<"Opcion no valida!"<<endl;
                 system("pause");
@@ -88,4 +105,26 @@ void imprimeContacto(contactoEmail &c){
     cout<<"Sexo: "<<c.sex<<endl;
     cout<<"Edad: "<<c.edad<<endl;
     cout<<"Email: "<<c.email.user<<"@"<<c.email.domain<<endl;
+}
+
+void modificarContacto(contactoEmail &c) {
+    string nuevoNom, nuevoUser, nuevoDomain;
+    char nuevoSex;
+    int nuevaEdad;
+
+    cin.ignore();
+    cout << "--- Modificar contacto ---" << endl;
+    cout << "Ingrese nuevo nombre: "; getline(cin, nuevoNom);
+    cout << "Ingrese nuevo sexo (M/F): "; cin >> nuevoSex;
+    cout << "Ingrese nueva edad: "; cin >> nuevaEdad;
+    cout << "Ingrese nuevo correo electronico (usuario@dominio): " << endl;
+    cout << "\tUsuario: "; cin >> nuevoUser;
+    cout << "\tDominio: "; cin >> nuevoDomain;
+
+    correo nuevoCorreo;
+    leerCorreo(nuevoCorreo, nuevoUser, nuevoDomain);
+    leerContacto(c, nuevoNom, nuevoSex, nuevaEdad, nuevoCorreo);
+    cout<<endl;
+    cout << "Contacto modificado exitosamente.\n";
+    cout<<endl;
 }
