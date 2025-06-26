@@ -28,47 +28,80 @@ int main(){
     n = 0;
     do{
         system("clear");
-        cout<<"Menu de opciones -------------------------"<<endl;
-        cout<<"1. Agregar contacto"<<endl;
-        cout<<"2. Mostrar contactos"<<endl;
-        cout<<"3. Modificar contacto"<<endl;
-        cout<<"0. Salir"<<endl;
-        cout<<"Elige una opcion: "; cin>>op;
+        cout << "===========================================\n";
+        cout << "     📒 AGENDA DE CONTACTOS - KIKI SYSTEM     \n";
+        cout << "===========================================\n\n";
+        cout << "1. Agregar contacto" << endl;
+        cout << "2. Mostrar contactos" << endl;
+        cout << "3. Modificar contacto" << endl;
+        cout << "0. Salir" << endl;
+        cout << "===================================" << endl;
+        cout << "Elige una opción: ";cin>>op;
         switch(op){
             case 1:
-                cout<<"--- Ingrese los datos de un usuario: --- "<<endl;
-                cin.ignore();
-                cout<<"Ingrese el nombre del contacto: "; getline(cin,nom);
-                cout<<"Ingrese el sexo (M/F): "; cin>>sex;
-                cout<<"Ingrese la edad: "; cin>>edad;
+                cout<<"\n--- Ingrese los datos de un usuario: --- "<<endl;
+            cin.ignore();
+            cout<<"Ingrese el nombre del contacto: "; getline(cin,nom);
+            do {
+                cout << "Ingrese el sexo (M/F): "; cin >> sex;
+                sex = toupper(sex);
+                if (sex != 'M' && sex != 'F') {
+                    cout<<endl;
+                    cout << "Sexo inválido. Solo se permite 'M' o 'F'.\n";
+                }
+            } while (sex != 'M' && sex != 'F');            
+            do {
+                cout << "Ingrese la edad (entero positivo): "; cin >> edad;
+                if(cin.fail() || edad <= 0){
+                    cout<<endl;
+                    cout << "Edad inválida. Intente nuevamente.\n";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                }
+            } while (edad <= 0);
                 cout<<"Ingrese el correo electronico (usuario@dominio): "<<endl;
                 cout<<"\tIngrese el usuario: "; cin>>user;
                 cout<<"\tIngrese el dominio: "; cin>>domain;
                 
                 leerCorreo(email,user,domain);
                 leerContacto(cont,nom,sex,edad,email);
-                //imprimeContacto(cont);
-
                 lista[n] = cont;
                 n++;
-                cin.get ();
+                cin.get();
                 break;
             case 2:
-                for(int i = 0; i < n; i++){
-                    cout<<"Contacto #"<<i+1<<endl;
-                    imprimeContacto(lista[i]);
-                    cout<<endl;
+                if(n == 0){
+                    cout << "No hay contactos registrados.\n";
+                } else {
+                    cout << "\n======= LISTA DE CONTACTOS =======\n" << endl;
+                    for(int i = 0; i < n; i++){
+                        cout << "Contacto #" << i + 1 << endl;
+                        imprimeContacto(lista[i]);
+                        cout << endl;
+                    }
+                    cout << "Total de contactos: " << n << "\n";
                 }
-                system("pause");
+                cin.get();
                 break;
-            case 0:
-                cout<<"Esta seguro de salir? (S/N): ";
+            case 0: {
+                char confirm;
+                cout << "\n¿Estás segura de que deseas salir? (S/N): ";
+                cin >> confirm;
+                if (confirm == 'S' || confirm == 's') {
+                    cout << "¡Hasta pronto!\n";
+                    return 0;
+                } else {
+                    op = -1; // evita que termine el bucle
+                }
                 break;
+            }
+
             case 3:
                 if (n==0){
                     cout<<"No hay contactos para modificar"<<endl;
                 }else {
                     int idx;
+                    cout << "\n--- Modificación de Contacto ---\n" << endl;
                     cout<<"Ingrese el número del contacto que desea modificar (1 a "<<n<<"): ";
                     cin>>idx;
                     if(idx < 1 || idx > n){
@@ -81,7 +114,9 @@ int main(){
                 break;
             default:
                 cout<<"Opcion no valida!"<<endl;
-                system("pause");
+                cout << "Presiona ENTER para continuar..."; 
+                cin.ignore();
+                cin.get();
                 break;
         }
     } while(op != 0);
@@ -101,22 +136,40 @@ void leerCorreo(correo &c, string u, string d){
 }
 
 void imprimeContacto(contactoEmail &c){
+    cout << "---------------------------------------------" << endl;
     cout<<"Nombre: "<<c.nom<<endl;
     cout<<"Sexo: "<<c.sex<<endl;
     cout<<"Edad: "<<c.edad<<endl;
     cout<<"Email: "<<c.email.user<<"@"<<c.email.domain<<endl;
+    cout << "---------------------------------------------" << endl;
 }
 
 void modificarContacto(contactoEmail &c) {
     string nuevoNom, nuevoUser, nuevoDomain;
-    char nuevoSex;
+    char nuevoSex,sex;
     int nuevaEdad;
 
     cin.ignore();
     cout << "--- Modificar contacto ---" << endl;
     cout << "Ingrese nuevo nombre: "; getline(cin, nuevoNom);
-    cout << "Ingrese nuevo sexo (M/F): "; cin >> nuevoSex;
-    cout << "Ingrese nueva edad: "; cin >> nuevaEdad;
+    do {
+        cout << "Ingrese nuevo sexo (M/F): "; cin >> nuevoSex;
+        nuevoSex = toupper(nuevoSex);
+        if (nuevoSex != 'M' && nuevoSex != 'F') {
+            cout<<endl;
+            cout << "Sexo inválido. Solo se permite 'M' o 'F'.\n";
+        }
+    } while (nuevoSex != 'M' && nuevoSex != 'F');
+    do {
+        cout << "Ingrese nueva edad (entero positivo): "; cin >> nuevaEdad;
+        if(cin.fail() || nuevaEdad <= 0){
+            cout<<endl;
+            cout << "Edad inválida. Intente nuevamente.\n";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+    } while (nuevaEdad <= 0);
+
     cout << "Ingrese nuevo correo electronico (usuario@dominio): " << endl;
     cout << "\tUsuario: "; cin >> nuevoUser;
     cout << "\tDominio: "; cin >> nuevoDomain;
@@ -125,6 +178,6 @@ void modificarContacto(contactoEmail &c) {
     leerCorreo(nuevoCorreo, nuevoUser, nuevoDomain);
     leerContacto(c, nuevoNom, nuevoSex, nuevaEdad, nuevoCorreo);
     cout<<endl;
-    cout << "Contacto modificado exitosamente.\n";
+    cout << "\nContacto modificado exitosamente.\n\n";
     cout<<endl;
 }
